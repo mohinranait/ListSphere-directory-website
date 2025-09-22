@@ -1,7 +1,7 @@
 import React from "react";
-import { cn } from "@/src/lib/utils";
-import { Card, CardContent } from "@/src/components/ui/card";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
 
 type Props = {
   children: React.ReactNode;
