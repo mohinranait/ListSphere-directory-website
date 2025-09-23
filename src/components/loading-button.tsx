@@ -20,7 +20,7 @@ const LoadingLutton = ({
   ...props
 }: LoadingLuttonProps) => {
   return (
-    <Button type={type} className={cn("", className)} {...props}>
+    <Button type={type} className={cn("cursor-pointer", className)} {...props}>
       {isLoading ? <LoaderCircle className="animate-spin" /> : icon}
       {children}
     </Button>
