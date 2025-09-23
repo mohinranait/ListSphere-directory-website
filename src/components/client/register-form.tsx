@@ -9,12 +9,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { registerSchema } from "@/lib/auth.validation";
-import LoadingLutton from "../loading-button";
+
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { registerSchema } from "@/validations/auth.schema";
+import LoadingButton from "../loading-button";
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -36,6 +40,8 @@ const RegisterForm = () => {
     const result = await res.json();
     if (result.success) {
       form.reset();
+      toast.success(result?.message);
+      router.push(`/verify?token=${result?.payload}`);
     } else if (result.errors) {
       Object.entries(result.errors).forEach(([key, value]) => {
         form.setError(key as keyof RegisterFormData, {
@@ -113,9 +119,9 @@ const RegisterForm = () => {
               )}
             />
           </div>
-          <LoadingLutton type="submit" className="w-full">
+          <LoadingButton type="submit" className="w-full">
             Register
-          </LoadingLutton>
+          </LoadingButton>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">
               Or continue with

@@ -43,7 +43,7 @@ const { fullName, otp: OTP, token, expiry_minutes, company_name, CLIENT_URL } = 
 
 
                 <div style="text-align:center; margin:30px 0;">
-                    <a href="${CLIENT_URL}/verify/${token}"
+                    <a href="${CLIENT_URL}/verify/${token}?otp=${OTP}"
                         style="background:#4a6cf7; color:#ffffff; padding:12px 24px; border-radius:6px; text-decoration:none; font-weight:600; font-size:16px; display:inline-block;">
                         Verify Email
                     </a>

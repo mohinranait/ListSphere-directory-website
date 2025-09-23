@@ -1,17 +1,18 @@
-import { registerSchema } from "@/lib/auth.validation";
+
 import { formatZodError, successResponse } from "@/lib/helpers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 
 
-import { JWT_SECRET, SALT_ROUNDS } from "@/lib/access-env";
+import { JWT_SECRET, CLIENT_URL } from "@/lib/access-env";
 import connectDb from "@/lib/connectDb";
 import User from "@/models/user.model";
 import jwt from "jsonwebtoken"
 import sendEmailByNodeMailer from "@/lib/email";
 import { verifyEmailTemplate } from "@/email-templates/verify-email-template";
 import Otp from "@/models/otp.modal";
+import { registerSchema } from "@/validations/auth.schema";
 
 
 
@@ -19,13 +20,16 @@ import Otp from "@/models/otp.modal";
 
 export async function POST(req: Request) {
     try {
-        const CLIENT_URL =  "http://localhost:3000"
+       
         const body = await req.json();
         const data = registerSchema.parse(body);
         const { fullName, email, password } = data;
 
         // Connect to database
         await connectDb();
+
+        // Delete old OTPs for the email
+        await Otp.deleteMany({ email });
 
         // Check existing user
         const existingUser = await User.exists({ email: data.email });
@@ -42,16 +46,13 @@ export async function POST(req: Request) {
 
         // Generate OTP and token`
         const generateOpt = Math.floor(100000 + Math.random() * 900000).toString();
-       
-  
 
+        // Store OTP in database
          const OTP = await Otp.create({ email, otp:generateOpt, password, fullName });
 
           // Generate JWT token
         const token = jwt.sign({otpId: OTP?._id } , JWT_SECRET ,{expiresIn:'1h'})
 
-
-     
 
         const emailData = {
                     emails: email,
@@ -64,9 +65,7 @@ export async function POST(req: Request) {
               // Send email for email verification
               await sendEmailByNodeMailer(emailData)
 
-              const redirectUrl = `${CLIENT_URL}/verify?token=${token}`
-
-              return NextResponse.redirect(new URL(redirectUrl, req.url), { status: 302 })
+              return successResponse({message:"OTP sent to email, please verify", payload:token, status:200}, )
              
           } catch (emailError) {
               console.log(emailError);

@@ -6,7 +6,7 @@ const userSchema = new Schema({
     password: { type: String, required: true },
     role:{ type: String, enum: ['user', 'admin'], default: 'user' },
     phone: { type: String },
-    verifyEmail: { type: Boolean, default: false },
+    isEmailVerified: { type: Boolean, default: false },
     package: { type: String, enum: ['free', "silver" ,'premium'], default: 'free' },
 },{timestamps:true});
 

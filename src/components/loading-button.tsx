@@ -11,7 +11,7 @@ type LoadingLuttonProps = {
   icon?: React.ReactNode;
   props?: React.ButtonHTMLAttributes<HTMLButtonElement>;
 };
-const LoadingLutton = ({
+const LoadingButton = ({
   children,
   className,
   isLoading,
@@ -27,4 +27,4 @@ const LoadingLutton = ({
   );
 };
 
-export default LoadingLutton;
+export default LoadingButton;

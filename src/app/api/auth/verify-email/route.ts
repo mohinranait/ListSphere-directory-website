@@ -4,7 +4,7 @@ import { JWT_SECRET, SALT_ROUNDS } from "@/lib/access-env";
 import Otp from "@/models/otp.modal";
 import bcrypt from "bcrypt";
 import User from "@/models/user.model";
-import { successResponse } from "@/lib/helpers";
+import { errorResponse, successResponse } from "@/lib/helpers";
 import { NextResponse } from "next/server";
 export async function POST(req: Request) {
     try {
@@ -59,13 +59,13 @@ export async function POST(req: Request) {
         }
 
         // create user
-        const user = await User.create(userData);
+        await User.create(userData);
         await Otp.findByIdAndDelete(otpId);
-        return successResponse({message:"User registered successfully", payload:{user},status:201})
+        return successResponse({message:"User registered successfully", payload:{user:"Registerd"},status:201})
 
 
     } catch (error) {
         console.log({error});
-        
+        return errorResponse({message: "Somthing wrong"})
     }
 }

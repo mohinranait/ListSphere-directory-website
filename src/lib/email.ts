@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 /**
  * Send email using nodemailer
 */
-const sendEmailByNodeMailer = async (data:any) =>  {
+const sendEmailByNodeMailer = async (data:{emails:string;subject:string;text:string;html:string}) =>  {
 
     try {
         const mailData = {

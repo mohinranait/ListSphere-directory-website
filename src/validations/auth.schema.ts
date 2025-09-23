@@ -1,5 +1,7 @@
+
 import z from "zod";
 
+// Register schema
 export const registerSchema = z.object({
   fullName: z
     .string()
@@ -12,3 +14,9 @@ export const registerSchema = z.object({
     .max(100, "Password must be at most 100 characters long"),
 });
 
+
+// login schema 
+export const loginSchema = z.object({
+    email: z.string().email("Provide valid email"),
+    password: z.string().nonempty("Password field is required")
+})

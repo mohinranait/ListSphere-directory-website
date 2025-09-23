@@ -7,9 +7,11 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 const VerifyOTPForm = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -17,8 +19,6 @@ const VerifyOTPForm = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ value });
-
     const res = await fetch("/api/auth/verify-email", {
       method: "POST",
       headers: {
@@ -28,7 +28,9 @@ const VerifyOTPForm = () => {
     });
     const result = await res.json();
     if (result.success) {
-      // form.reset();
+      setValue("");
+      toast.success(result?.message);
+      router.push(`/login`);
     } else if (result.errors) {
       // Object.entries(result.errors).forEach(([key, value]) => {
       //   form.setError(key as keyof RegisterFormData, {
@@ -65,7 +67,7 @@ const VerifyOTPForm = () => {
         </div>
 
         <LoadingLutton type="submit" className="w-full">
-          verify account
+          Verify account
         </LoadingLutton>
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border"></div>
 
