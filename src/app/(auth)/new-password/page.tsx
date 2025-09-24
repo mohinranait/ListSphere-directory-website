@@ -119,7 +119,7 @@ const NewPassword = () => {
             />
           </div>
           <LoadingButton isLoading={loading} type="submit" className="w-full">
-            New Password
+            Continue
           </LoadingButton>
         </div>
       </form>

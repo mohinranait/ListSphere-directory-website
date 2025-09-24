@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 export function ClientHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,9 +65,11 @@ export function ClientHeader() {
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center space-x-4">
-              <Button variant="outline" size="sm">
-                Sign In
-              </Button>
+              <Link href={"/login"}>
+                <Button variant="outline" className="cursor-pointer" size="sm">
+                  Sign In
+                </Button>
+              </Link>
               <Button size="sm">List Business</Button>
             </div>
 
@@ -107,9 +110,11 @@ export function ClientHeader() {
                 Contact
               </a>
               <div className="pt-4 space-y-2">
-                <Button variant="outline" className="w-full bg-transparent">
-                  Sign In
-                </Button>
+                <Link href={"/login"} className="cursor-pointer">
+                  <Button variant="outline" className="w-full bg-transparent">
+                    Sign In
+                  </Button>
+                </Link>
                 <Button className="w-full">List Business</Button>
               </div>
             </div>

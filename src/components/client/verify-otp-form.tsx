@@ -15,11 +15,12 @@ import { PopcornIcon } from "lucide-react";
 const VerifyOTPFormComponent = () => {
   const router = useRouter();
   const [error, setError] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     const res = await fetch("/api/auth/forgot-password", {
       method: "PUT",
       headers: {
@@ -36,6 +37,7 @@ const VerifyOTPFormComponent = () => {
     } else {
       setError(result?.message);
     }
+    setLoading(false);
   };
   return (
     <form onSubmit={onSubmit} className="p-6 md:p-8">
@@ -70,7 +72,7 @@ const VerifyOTPFormComponent = () => {
           </InputOTP>
         </div>
 
-        <LoadingLutton type="submit" className="w-full">
+        <LoadingLutton isLoading={loading} type="submit" className="w-full">
           Verify OTP
         </LoadingLutton>
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border"></div>

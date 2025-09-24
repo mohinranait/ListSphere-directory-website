@@ -3,12 +3,27 @@ import { cn } from "@/lib/utils";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/admin/app-sidebar";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { getSingleUser } from "../actions/auth";
+import { setUser } from "@/redux/features/authSlice";
 
 interface Props {
   children?: React.ReactNode;
 }
 
 const AdminLayout = ({ children }: Props) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    (async () => {
+      const user = await getSingleUser();
+      console.log({ user });
+      if (user?.success) {
+        dispatch(setUser(user?.payload));
+      }
+    })();
+  }, []);
   return (
     <SidebarProvider>
       <AppSidebar />

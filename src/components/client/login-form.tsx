@@ -9,18 +9,21 @@ import { loginSchema } from "@/validations/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormMessage } from "../ui/form";
 import { useState } from "react";
-import { Eye, EyeClosed } from "lucide-react";
+import { AlertCircleIcon, Eye, EyeClosed } from "lucide-react";
 import LoadingButton from "../loading-button";
 import { loginUser } from "@/app/actions/auth";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setUser } from "@/redux/features/authSlice";
+import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export type TLoginFrom = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<TLoginFrom>({
@@ -40,6 +43,10 @@ export function LoginForm() {
         form.reset();
         dispatch(setUser({ ...res.payload?.user }));
         router.push("/");
+        toast.success(res?.message);
+      } else {
+        setError(res?.message);
+        toast.error(res?.message);
       }
     } catch (error) {
       console.log({ error });
@@ -56,6 +63,15 @@ export function LoginForm() {
               Login to your Acme Inc account
             </p>
           </div>
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircleIcon />
+              <AlertTitle>Please verify your information.</AlertTitle>
+              <AlertDescription>
+                <li>{error}</li>
+              </AlertDescription>
+            </Alert>
+          )}
           <div className="grid gap-2">
             <FormField
               name="email"

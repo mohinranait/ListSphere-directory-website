@@ -18,6 +18,7 @@ import LoadingButton from "../loading-button";
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<RegisterFormData>({
@@ -30,6 +31,7 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
+    setLoading(true);
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: {
@@ -49,6 +51,7 @@ const RegisterForm = () => {
         });
       });
     }
+    setLoading(false);
   };
   return (
     <Form {...form}>
@@ -119,7 +122,7 @@ const RegisterForm = () => {
               )}
             />
           </div>
-          <LoadingButton type="submit" className="w-full">
+          <LoadingButton isLoading={loading} type="submit" className="w-full">
             Register
           </LoadingButton>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
