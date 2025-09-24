@@ -13,8 +13,8 @@ import { SidebarHeaderAction } from "./sidebar-header";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" variant="floating" {...props}>
-      <SidebarHeader>
+    <Sidebar collapsible="icon" variant="sidebar" {...props}>
+      <SidebarHeader className="border-b h-16">
         <SidebarHeaderAction />
       </SidebarHeader>
       <SidebarContent>

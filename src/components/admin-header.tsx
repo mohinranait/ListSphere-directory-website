@@ -32,14 +32,17 @@ export const Header = ({
   return (
     <header
       className={cn(
-        "bg-background flex h-16 items-center gap-3 p-4 sm:gap-4",
-        fixed && "header-fixed peer/header fixed z-50 w-[inherit] rounded-md",
+        "bg-background flex h-16 items-center gap-3 p-4 border-b sm:gap-4",
+        fixed && "header-fixed peer/header fixed z-50 w-[inherit] ",
         offset > 10 && fixed ? "shadow-sm" : "shadow-none",
         className
       )}
       {...props}
     >
-      <SidebarTrigger variant="outline" className="scale-125 sm:scale-100" />
+      <SidebarTrigger
+        variant="outline"
+        className="scale-125 cursor-pointer sm:scale-100"
+      />
       <Separator orientation="vertical" className="h-6" />
       {children}
     </header>

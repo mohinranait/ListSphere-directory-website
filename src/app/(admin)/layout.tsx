@@ -16,7 +16,7 @@ const AdminLayout = ({ children }: Props) => {
         id="content"
         className={cn(
           "ml-auto w-full max-w-full",
-          "peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon)-1rem)]",
+          "peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon))]",
           "peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]",
           "sm:transition-[width] sm:duration-200 sm:ease-linear",
           "flex h-svh flex-col",

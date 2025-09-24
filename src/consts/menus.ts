@@ -2,16 +2,10 @@ import { NavGroup } from '@/types/nav.type'
 import {
 
   LayoutDashboard,
-  CheckSquare,
+
   Package,
-  MessageSquare,
   Users,
-  Lock,
-  Bug,
-  UserX,
-  ShieldAlert,
-  ServerCrash,
-  ShieldBan,
+
   Settings,
   UserCog,
   Wrench,
@@ -28,33 +22,22 @@ export const sidebarData: NavGroup[] = [
       items: [
         {
           title: 'Dashboard',
-          url: '/',
+          url: '/admin',
           icon: LayoutDashboard,
         },
         {
-          title: 'Tasks',
-          url: '/tasks',
-          icon: CheckSquare,
-        },
-        {
-          title: 'Apps',
-          url: '/apps',
+          title: 'Package',
+          url: '/admin/package',
           icon: Package,
         },
         {
-          title: 'Chats',
-          url: '/chats',
-          badge: '3',
-          icon: MessageSquare,
-        },
-        {
           title: 'Users',
-          url: '/users',
+          url: '/admin/users',
           icon: Users,
         },
         {
           title: 'Secured by Clerk',
-          icon: KeyRound, // Clerk logo না থাকলে যেকোনো auth related icon দিতে পারেন
+          icon: KeyRound, 
           items: [
             {
               title: 'Sign In',
@@ -72,68 +55,7 @@ export const sidebarData: NavGroup[] = [
         },
       ],
     },
-    {
-      title: 'Pages',
-      items: [
-        {
-          title: 'Auth',
-          icon: Lock,
-          items: [
-            {
-              title: 'Sign In',
-              url: '/sign-in',
-            },
-            {
-              title: 'Sign In (2 Col)',
-              url: '/sign-in-2',
-            },
-            {
-              title: 'Sign Up',
-              url: '/sign-up',
-            },
-            {
-              title: 'Forgot Password',
-              url: '/forgot-password',
-            },
-            {
-              title: 'OTP',
-              url: '/otp',
-            },
-          ],
-        },
-        {
-          title: 'Errors',
-          icon: Bug,
-          items: [
-            {
-              title: 'Unauthorized',
-              url: '/401',
-              icon: ShieldAlert,
-            },
-            {
-              title: 'Forbidden',
-              url: '/403',
-              icon: UserX,
-            },
-            {
-              title: 'Not Found',
-              url: '/404',
-              icon: ShieldBan,
-            },
-            {
-              title: 'Internal Server Error',
-              url: '/500',
-              icon: ServerCrash,
-            },
-            {
-              title: 'Maintenance Error',
-              url: '/503',
-              icon: ShieldAlert,
-            },
-          ],
-        },
-      ],
-    },
+  
     {
       title: 'Other',
       items: [
