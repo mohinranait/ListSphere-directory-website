@@ -13,6 +13,9 @@ export function formatZodError(error: ZodError) {
     return formatted;
 }
 
+
+
+
 // Success response helper method
 export function successResponse({message, payload, status=200}:{message:string, payload?:unknown, status?:number}) {
     return NextResponse.json({message, payload, success:true},{status})

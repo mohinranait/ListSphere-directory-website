@@ -86,12 +86,12 @@ export function LoginForm() {
                 <FormItem>
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
+                    <Link
+                      href="/forgot-password"
                       className="ml-auto text-sm underline-offset-2 hover:underline"
                     >
                       Forgot your password?
-                    </a>
+                    </Link>
                   </div>
                   <div>
                     <div className="relative">
