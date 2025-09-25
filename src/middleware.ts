@@ -5,7 +5,8 @@ import { jwtVerify } from "jose";
 
 export async function middleware (request: NextRequest){
     const token = request.cookies.get("token")?.value;
-    console.log({token});
+    const {pathname} = request.nextUrl;
+
     
     if (!token) {   
         return NextResponse.redirect(new URL("/login", request.url));
@@ -16,9 +17,16 @@ export async function middleware (request: NextRequest){
         const secret = new TextEncoder().encode(JWT_LOGIN);
         const {payload} = await jwtVerify(token, secret)
 
-        if( payload.role !== 'admin' ){
-            return NextResponse.redirect(new URL('/', request.url))
+        if (!payload?.role || (payload.role !== "admin" && payload.role !== "user")) {
+            return NextResponse.redirect(new URL("/", request.url));
         }
+        
+        if(payload?.role === 'user' ){
+            if (pathname.startsWith("/admin")) {
+                return NextResponse.redirect(new URL("/", request.url));
+            }
+        }
+
         return NextResponse.next();
 
     } catch (error) {
@@ -29,5 +37,5 @@ export async function middleware (request: NextRequest){
 }
 
 export const config = {
-     matcher: ["/admin/:path*"],
+     matcher: ["/admin/:path*", "/profile/:path*"],
 }

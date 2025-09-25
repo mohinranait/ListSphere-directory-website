@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/admin/app-sidebar";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { useAppDispatch } from "@/hooks/useRedux";
 import { getSingleUser } from "../actions/auth";
 import { setUser } from "@/redux/features/authSlice";
 
@@ -17,10 +17,10 @@ const AdminLayout = ({ children }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const user = await getSingleUser();
-      console.log({ user });
-      if (user?.success) {
-        dispatch(setUser(user?.payload));
+      const res = await getSingleUser();
+      console.log({ res });
+      if (res.success && res.payload) {
+        dispatch(setUser(res.payload.user));
       }
     })();
   }, []);

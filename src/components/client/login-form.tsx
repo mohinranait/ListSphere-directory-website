@@ -39,10 +39,14 @@ export function LoginForm() {
     try {
       const res = await loginUser(data);
 
-      if (res.success) {
+      if (res.success && res.payload) {
         form.reset();
         dispatch(setUser({ ...res.payload?.user }));
-        router.push("/");
+        if (res.payload?.user?.role === "admin") {
+          router.push("/admin");
+        } else if (res.payload?.user?.role === "user") {
+          router.push("/profile");
+        }
         toast.success(res?.message);
       } else {
         setError(res?.message);
