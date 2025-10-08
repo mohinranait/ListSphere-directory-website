@@ -10,6 +10,7 @@ type LoadingLuttonProps = {
   type: "button" | "submit" | "reset";
   icon?: React.ReactNode;
   props?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+  callBack?: () => void;
 };
 const LoadingButton = ({
   children,
@@ -17,10 +18,16 @@ const LoadingButton = ({
   isLoading,
   type = "button",
   icon,
+  callBack,
   ...props
 }: LoadingLuttonProps) => {
   return (
-    <Button type={type} className={cn("cursor-pointer", className)} {...props}>
+    <Button
+      type={type}
+      onClick={callBack}
+      className={cn("cursor-pointer", className)}
+      {...props}
+    >
       {isLoading ? <LoaderCircle className="animate-spin" /> : icon}
       {children}
     </Button>

@@ -25,3 +25,18 @@ export function successResponse({message, payload, status=200}:{message:string, 
 export function errorResponse ({message, status=500}:{message:string;status?:number}) {
     return NextResponse.json({message, status,success:false})
 }
+
+
+// Generate slug
+export function generateSlug(text:string) {
+  return text
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()   
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+

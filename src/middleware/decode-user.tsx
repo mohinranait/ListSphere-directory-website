@@ -7,6 +7,7 @@ interface DecodedToken extends JwtPayload {
   role: string;
 }
 
+// GET TOKEN INFORMATION
 export const isAuth = async (): Promise<DecodedToken | null> => {
   const cookiesStore = await cookies();
   const token = cookiesStore.get("token")?.value;

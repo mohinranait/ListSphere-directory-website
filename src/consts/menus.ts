@@ -36,11 +36,16 @@ export const sidebarData: NavGroup[] = [
           icon: Users,
         },
         {
-          title: 'Secured by Clerk',
+          title: 'Categories',
+          url: '/admin/categories',
+          icon: Users,
+        },
+        {
+          title: 'Categories',
           icon: KeyRound, 
           items: [
             {
-              title: 'Sign In',
+              title: 'Manage Category',
               url: '/clerk/sign-in',
             },
             {
