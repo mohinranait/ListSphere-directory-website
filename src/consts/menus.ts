@@ -14,6 +14,7 @@ import {
   Monitor,
   HelpCircle,
   KeyRound,
+  Layers2,
 } from 'lucide-react'
 
 export const sidebarData: NavGroup[] = [
@@ -35,29 +36,6 @@ export const sidebarData: NavGroup[] = [
           url: '/admin/users',
           icon: Users,
         },
-        {
-          title: 'Categories',
-          url: '/admin/categories',
-          icon: Users,
-        },
-        {
-          title: 'Categories',
-          icon: KeyRound, 
-          items: [
-            {
-              title: 'Manage Category',
-              url: '/clerk/sign-in',
-            },
-            {
-              title: 'Sign Up',
-              url: '/clerk/sign-up',
-            },
-            {
-              title: 'User Management',
-              url: '/clerk/user-management',
-            },
-          ],
-        },
       ],
     },
   
@@ -69,37 +47,19 @@ export const sidebarData: NavGroup[] = [
           icon: Settings,
           items: [
             {
-              title: 'Profile',
-              url: '/settings',
-              icon: UserCog,
+              title: 'Categories',
+              url: '/admin/categories',
+              icon: Layers2 ,
             },
             {
-              title: 'Account',
-              url: '/settings/account',
-              icon: Wrench,
-            },
-            {
-              title: 'Appearance',
-              url: '/settings/appearance',
-              icon: Palette,
-            },
-            {
-              title: 'Notifications',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
-            {
-              title: 'Display',
-              url: '/settings/display',
+              title: 'Icons',
+              url: '/admin/icons',
               icon: Monitor,
             },
+           
           ],
         },
-        {
-          title: 'Help Center',
-          url: '/help-center',
-          icon: HelpCircle,
-        },
+        
       ],
     },
   ]

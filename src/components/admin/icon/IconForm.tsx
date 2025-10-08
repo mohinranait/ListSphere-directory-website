@@ -5,44 +5,40 @@ import * as LucideIcons from "lucide-react";
 type LucideIconName = keyof typeof LucideIcons;
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "../ui/label";
-import GlobalModal from "../shared/GlobalModal";
-import LoadingButton from "../loading-button";
-import UploadImage from "../shared/UploadImage";
+import { Label } from "@/components/ui/label";
+import GlobalModal from "@/components/shared/GlobalModal";
+import LoadingButton from "@/components/loading-button";
+import UploadImage from "@/components/shared/UploadImage";
 import { toast } from "sonner";
-import { ICategory } from "@/types/category.type";
 import { IIcon } from "@/types/icon.type";
-import LuIcon from "../shared/LuIcon";
 
 // Fix schema
-const categorySchema = z.object({
+const iconSchema = z.object({
   name: z
     .string()
     .min(1, "Minimum 1 character required")
     .max(100, "Maximum 100 characters allowed")
     .trim()
     .nonempty("Name is required"),
-  type: z.enum(["image", "icon"]).default("image").nonoptional(),
   status: z.boolean().default(true).nonoptional(),
-  icon: z.string(),
 });
 
-type CategoryFormValues = z.infer<typeof categorySchema>;
+type IconFormValues = z.infer<typeof iconSchema>;
 
 type Props = {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
-  setCategories: React.Dispatch<React.SetStateAction<ICategory[]>>;
-  selected: ICategory | null;
-  setSelected: React.Dispatch<React.SetStateAction<ICategory | null>>;
+  setIcons: React.Dispatch<React.SetStateAction<IIcon[]>>;
+  selected: IIcon | null;
+  setSelected: React.Dispatch<React.SetStateAction<IIcon | null>>;
 };
-const CategoryForm = ({
+const IconForm = ({
   isOpen,
   setIsOpenModal,
-  setCategories,
+  setIcons,
   selected,
   setSelected,
 }: Props) => {
@@ -54,26 +50,23 @@ const CategoryForm = ({
     getValues,
     reset,
     formState: { errors },
-  } = useForm<CategoryFormValues>({
-    resolver: zodResolver(categorySchema),
+  } = useForm<IconFormValues>({
+    resolver: zodResolver(iconSchema),
     defaultValues: {
       name: "",
-      type: "image",
       status: true,
-      icon: "",
     },
   });
 
-  const [icons, setIcons] = useState<IIcon[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("");
 
   // Submit form
-  const onSubmit = async (data: CategoryFormValues) => {
+  const onSubmit = async (data: IconFormValues) => {
     setIsLoading(true);
     if (selected) {
       try {
-        const res = await fetch(`/api/admin/categories/${selected?._id}`, {
+        const res = await fetch(`/api/admin/icons/${selected?._id}`, {
           method: "PATCH",
           headers: {
             "content-type": "application/json",
@@ -86,9 +79,10 @@ const CategoryForm = ({
           return;
         }
         toast.success(getRes.message);
-        setCategories((prev) =>
+
+        setIcons((prev) =>
           prev.map((item) =>
-            item._id === selected?._id ? getRes?.payload.category : item
+            item._id === selected?._id ? getRes?.payload.icon : item
           )
         );
         setIsOpenModal(false);
@@ -99,7 +93,7 @@ const CategoryForm = ({
       }
     } else {
       try {
-        const res = await fetch(`/api/admin/categories`, {
+        const res = await fetch(`/api/admin/icons`, {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -113,7 +107,7 @@ const CategoryForm = ({
         }
         toast.success(getRes.message);
 
-        setCategories((prev) => [getRes.payload.category, ...prev]);
+        setIcons((prev) => [getRes.payload.icon, ...prev]);
         setIsOpenModal(false);
         resetForm();
       } catch (error) {
@@ -126,9 +120,7 @@ const CategoryForm = ({
   const resetForm = () => {
     reset({
       name: "",
-      icon: "",
       status: true,
-      type: "image",
     });
   };
 
@@ -138,46 +130,21 @@ const CategoryForm = ({
     onSubmit(d);
   };
 
-  // handle tabe with type
-  const handleTabValue = (e: "image" | "icon") => {
-    setValue("type", e);
-  };
-
   useEffect(() => {
     if (!selected) {
       return;
     }
     reset({
       name: selected?.name,
-      icon: selected?.icon,
       status: selected?.status,
-      type: selected?.type,
     });
   }, [selected]);
-
-  useEffect(() => {
-    (async function () {
-      try {
-        const res = await fetch(`/api/public/icon`, {
-          method: "GET",
-        });
-        const data = await res.json();
-        if (data.success) {
-          setIcons(data?.payload?.icons);
-        }
-      } catch (error) {
-        console.log({ error });
-      }
-    })();
-  }, []);
-
-  console.log({ icons });
 
   return (
     <GlobalModal
       open={isOpen}
       setOpen={setIsOpenModal}
-      className="!max-w-[500px]"
+      className="!max-w-[400px]"
       withFooter={
         <LoadingButton
           isLoading={isLoading}
@@ -192,66 +159,17 @@ const CategoryForm = ({
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-3">
         {/* Name */}
         <div>
-          <Label className="block text-sm font-medium mb-1">Name</Label>
+          <Label className="block text-sm font-medium mb-1">Icon Name</Label>
           <Input
             type="text"
             {...register("name")}
-            placeholder="Enter category name"
+            placeholder="Enter icon name"
             className="w-full border p-2 rounded-md"
           />
           {errors.name && (
             <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
           )}
         </div>
-
-        <Tabs
-          onValueChange={(e) => handleTabValue(e as "image" | "icon")}
-          defaultValue="image"
-          className="gap-1"
-        >
-          <TabsList>
-            <TabsTrigger value="image" className="cursor-pointer">
-              Image
-            </TabsTrigger>
-            <TabsTrigger value="icon" className="cursor-pointer">
-              Icon
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="image">
-            <div>
-              {/* <Label className="block text-sm font-medium mb-1">Image</Label> */}
-              <UploadImage className="bg-white" />
-            </div>
-          </TabsContent>
-          <TabsContent value="icon">
-            <div>
-              <div className="max-h-[180px] overflow-auto grid grid-cols-12 gap-1">
-                {icons.map((icon, i) => {
-                  return (
-                    <button
-                      key={i}
-                      type="button"
-                      className={`flex cursor-pointer flex-col items-center justify-center border rounded-md p-2 ${
-                        selectedIcon === icon?.name
-                          ? "bg-blue-100 border-blue-500"
-                          : "border-gray-300"
-                      }`}
-                      onClick={() => {
-                        setSelectedIcon(icon?.name);
-                        setValue("icon", icon?.name);
-                      }}
-                    >
-                      <LuIcon
-                        iconName={`${icon?.name as LucideIconName}`}
-                        size={14}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
 
         <Controller
           name="status"
@@ -272,4 +190,4 @@ const CategoryForm = ({
   );
 };
 
-export default CategoryForm;
+export default IconForm;

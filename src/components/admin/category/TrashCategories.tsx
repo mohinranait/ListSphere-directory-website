@@ -18,6 +18,10 @@ import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
+import LuIcon from "@/components/shared/LuIcon";
+import * as LucideIcons from "lucide-react";
+type LucideIconName = keyof typeof LucideIcons;
+
 type Props = {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   isOpenModal: boolean;
@@ -142,7 +146,7 @@ const TrashCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
               />
             </TableHead>
             <TableHead className="">Name</TableHead>
-            <TableHead>icon</TableHead>
+
             <TableHead>Status</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>Updated</TableHead>
@@ -167,47 +171,66 @@ const TrashCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
               </TableCell>
             </TableRow>
           )}
-          {categories.map((category, idx) => (
-            <TableRow key={idx}>
-              <TableCell className="font-medium">
-                <Checkbox
-                  id={category?._id}
-                  checked={allSelected?.includes(category?._id)}
-                  onCheckedChange={() => handleCheckboxChange(category?._id)}
-                />
-              </TableCell>
-              <TableCell className="font-medium">{category.name}</TableCell>
-              <TableCell>{category.type}</TableCell>
-              <TableCell>
-                <Badge variant={category.status ? "default" : "destructive"}>
-                  {category.status ? "Active" : "In-Active"}
-                </Badge>
-              </TableCell>
+          {categories.map((category, idx) => {
+            return (
+              <TableRow key={idx}>
+                <TableCell className="font-medium">
+                  <Checkbox
+                    id={category?._id}
+                    checked={allSelected?.includes(category?._id)}
+                    onCheckedChange={() => handleCheckboxChange(category?._id)}
+                  />
+                </TableCell>
+                <TableCell className="font-medium flex gap-1 items-center ">
+                  {category.type === "icon" ? (
+                    <LuIcon
+                      iconName={`${category?.icon as LucideIconName}`}
+                      size={14}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {category.name}
+                </TableCell>
 
-              <TableCell>
-                {format(new Date(category.createdAt), " dd MMM, yyyy")}
-              </TableCell>
-              <TableCell>
-                {format(new Date(category.updatedAt), " dd MMM, yyyy")}
-              </TableCell>
-              <TableCell className="text-right flex justify-end gap-2">
-                <Button className="cursor-pointer">
-                  <Edit />
-                </Button>
-                <Button
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setIsDeleteModal(true);
-                  }}
-                  type="button"
-                  className="cursor-pointer"
-                  variant={"destructive"}
-                >
-                  <Trash2 />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell>
+                  <Badge variant={category.status ? "default" : "destructive"}>
+                    {category.status ? "Active" : "In-Active"}
+                  </Badge>
+                </TableCell>
+
+                <TableCell>
+                  {format(new Date(category.createdAt), "dd MMM, yyyy")}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(category.updatedAt), "dd MMM, yyyy")}
+                </TableCell>
+                <TableCell className="text-right flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setIsOpenModal(true);
+                    }}
+                    className="cursor-pointer size-8"
+                  >
+                    <Edit size={10} />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setIsDeleteModal(true);
+                    }}
+                    type="button"
+                    className="cursor-pointer size-8"
+                    variant={"destructive"}
+                  >
+                    <Trash2 size={10} />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
 
@@ -215,6 +238,8 @@ const TrashCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
         isOpen={isOpenModal}
         setIsOpenModal={setIsOpenModal}
         setCategories={setCategories}
+        selected={selectedCategory}
+        setSelected={setSelectedCategory}
       />
 
       {/* Delete Modal */}

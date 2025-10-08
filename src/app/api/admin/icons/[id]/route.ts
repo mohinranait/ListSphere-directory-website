@@ -2,9 +2,9 @@
 import connectDb from "@/lib/connectDb";
 import { errorResponse, generateSlug, successResponse } from "@/lib/helpers";
 import { isAuth } from "@/middleware/decode-user";
-import Category from "@/models/category.model";
+import Icon from "@/models/icon.model";
 
-// Soft Delete Category
+// Soft Delete icon
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
    const { id } = await params;
@@ -15,19 +15,19 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     }
     
     await connectDb()
-    const category = await Category.findByIdAndDelete(id)
+    const icon = await Icon.findByIdAndDelete(id)
 
     return successResponse({
       message: "Delete successfully",
       status: 200,
-      payload: {category},
+      payload: {icon},
     });
   } catch (error) {
     return errorResponse({ message: "Server error" });
   }
 }
 
-// Update Category By CategoryID
+// Update icon By IconID
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   try {
     const {id} = await params
@@ -40,12 +40,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     
     await connectDb()
     const slug = generateSlug(body.name)
-    const category = await Category.findByIdAndUpdate(id,{...body,slug}, {new:true, runValidators:true})
+    const icon = await Icon.findByIdAndUpdate(id,{...body,slug}, {new:true, runValidators:true})
 
     return successResponse({
       message: "Update successfully",
       status: 200,
-      payload: {category},
+      payload: {icon},
     });
   } catch (error) {
     return errorResponse({ message: "Server error" });

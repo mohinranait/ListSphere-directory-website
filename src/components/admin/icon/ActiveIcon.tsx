@@ -19,10 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import CategoryForm from "../category-form";
+
 import DeleteModal from "@/components/shared/DeleteModal";
 import { toast } from "sonner";
-import { ICategory } from "@/types/category.type";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
@@ -30,25 +29,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import LuIcon from "@/components/shared/LuIcon";
 import { Input } from "@/components/ui/input";
 import GlobalPagination from "@/components/shared/pagination";
+import { IIcon } from "@/types/icon.type";
+import IconForm from "./IconForm";
 type Props = {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   isOpenModal: boolean;
 };
-const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
+const ActiveIcon = ({ setIsOpenModal, isOpenModal }: Props) => {
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [icons, setIcons] = useState<IIcon[]>([]);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
-    null
-  );
+  const [selectedIcon, setSelectedIcon] = useState<IIcon | null>(null);
   const [status, setStatus] = useState("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState<number>(0);
   const [allSelected, setAllSelected] = useState<string[]>([]);
 
-  const getCategories = async (query: {
+  const getIcons = async (query: {
     limit?: number;
     page?: number;
     search?: string;
@@ -61,7 +60,7 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
       if (query.page) params.append("page", String(query.page));
       if (query.search) params.append("search", query.search);
       if (query.status) params.append("status", query.status);
-      const url = `/api/admin/categories?${params.toString()}`;
+      const url = `/api/admin/icons?${params.toString()}`;
       const res = await fetch(url, {
         method: "GET",
         headers: {
@@ -75,7 +74,7 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
       }
 
       const getData = getRes.payload;
-      setCategories(getData?.categories);
+      setIcons(getData?.icons);
       setTotal(getData?.pagination?.total);
       setLimit(getData?.pagination?.limit);
       setPage(getData?.pagination?.page);
@@ -87,7 +86,7 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
   };
 
   useEffect(() => {
-    getCategories({
+    getIcons({
       page: 1,
       limit,
     });
@@ -95,7 +94,7 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
 
   // handle search
   const handleSearch = () => {
-    getCategories({
+    getIcons({
       page,
       limit,
       search,
@@ -105,9 +104,8 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
 
   // handle filter by status
   const handleChangeStatus = (e: string) => {
-    console.log({ e });
     setStatus(e);
-    getCategories({
+    getIcons({
       page,
       limit,
       search,
@@ -118,22 +116,19 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
   // delete method
   const handleDelete = async () => {
     try {
-      const res = await fetch(
-        `/api/admin/categories/${selectedCategory?._id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`/api/admin/icons/${selectedIcon?._id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
       const resData = await res.json();
       if (!resData.success) {
         return;
       }
-      const cat = resData.payload?.category;
+      const cat = resData.payload?.icon;
 
-      setCategories((prev) => prev.filter((item) => item?._id !== cat?._id));
+      setIcons((prev) => prev.filter((item) => item?._id !== cat?._id));
       setIsDeleteModal(false);
-      setSelectedCategory(null);
+      setSelectedIcon(null);
       toast.success(resData.message);
     } catch (error) {
       console.log(error);
@@ -153,23 +148,23 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
 
   // handle all Select
   const handleAllSelect = () => {
-    if (allSelected?.length === categories.length) {
+    if (allSelected?.length === icons.length) {
       setAllSelected([]);
     } else {
-      setAllSelected(categories?.map((p) => p._id));
+      setAllSelected(icons?.map((p) => p._id));
     }
   };
 
   const handelSoftDelete = async () => {
     try {
-      const res = await fetch(`/api/admin/categories`, {
+      const res = await fetch(`/api/admin/icons`, {
         method: "PUT",
         credentials: "include",
         body: JSON.stringify({ ids: allSelected, action: true }),
       });
       const resData = await res.json();
       if (resData?.success) {
-        setCategories((prev) =>
+        setIcons((prev) =>
           prev.filter((cat) => !allSelected.includes(cat._id))
         );
         setAllSelected([]);
@@ -193,7 +188,7 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
             onClick={handelSoftDelete}
             variant={"destructive"}
           >
-            Delete {allSelected?.length} selected
+            Trash {allSelected?.length} selected
           </Button>
         </div>
       )}
@@ -227,108 +222,64 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
         </div>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="">
-              <Checkbox
-                id="all-status"
-                checked={allSelected.length === categories.length}
-                onCheckedChange={handleAllSelect}
-              />
-            </TableHead>
-            <TableHead className="">Name</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead>Updated</TableHead>
-            <TableHead className="text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+      <div className="pt-4">
+        {icons?.length === 0 && !isLoading && (
+          <div className="bg-gray-100 py-10 text-center">Data not found</div>
+        )}
+        <div className="grid grid-cols-6 gap-2">
           {isLoading &&
-            Array.from({ length: 4 }).map((_, rowIndex) => (
-              <TableRow key={rowIndex}>
-                {Array.from({ length: 7 }).map((_, colIndex) => (
-                  <TableCell key={colIndex}>
-                    <Skeleton className="h-6 " />{" "}
-                  </TableCell>
-                ))}
-              </TableRow>
+            Array.from({ length: 12 }).map((_, colIndex) => (
+              <div key={colIndex}>
+                <Skeleton className="h-20 " />{" "}
+              </div>
             ))}
-          {categories?.length === 0 && !isLoading && (
-            <TableRow>
-              <TableCell colSpan={7} className="bg-gray-100 text-center">
-                Data not found
-              </TableCell>
-            </TableRow>
-          )}
           {!isLoading &&
-            categories.map((category, idx) => {
+            icons.map((icon, idx) => {
               return (
-                <TableRow key={idx}>
-                  <TableCell className="font-medium">
-                    <Checkbox
-                      id={category?._id}
-                      checked={allSelected?.includes(category?._id)}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(category?._id)
-                      }
+                <div key={idx} className="border p-2  rounded-md">
+                  <div className="font-medium flex flex-col text-xs gap-1 items-center ">
+                    <LuIcon
+                      iconName={`${icon?.name as LucideIconName}`}
+                      size={16}
                     />
-                  </TableCell>
-                  <TableCell className="font-medium flex gap-1 items-center ">
-                    {category.type === "icon" ? (
-                      <LuIcon
-                        iconName={`${category?.icon as LucideIconName}`}
-                        size={14}
-                      />
-                    ) : (
-                      ""
-                    )}
-                    {category.name}
-                  </TableCell>
 
-                  <TableCell>
-                    <Badge
-                      variant={category.status ? "default" : "destructive"}
-                    >
-                      {category.status ? "Active" : "In-Active"}
-                    </Badge>
-                  </TableCell>
+                    {icon.name}
+                  </div>
 
-                  <TableCell>
-                    {format(new Date(category.createdAt), "dd MMM, yyyy")}
-                  </TableCell>
-                  <TableCell>
-                    {format(new Date(category.updatedAt), "dd MMM, yyyy")}
-                  </TableCell>
-                  <TableCell className="text-right flex justify-end gap-2">
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        setSelectedCategory(category);
-                        setIsOpenModal(true);
-                      }}
-                      className="cursor-pointer size-8"
-                    >
-                      <Edit size={10} />
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setSelectedCategory(category);
-                        setIsDeleteModal(true);
-                      }}
-                      type="button"
-                      className="cursor-pointer size-8"
-                      variant={"destructive"}
-                    >
-                      <Trash2 size={10} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                  <div className="text-right flex justify-between gap-2">
+                    <div className="flex gap-2 ">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedIcon(icon);
+                          setIsOpenModal(true);
+                        }}
+                        className="cursor-pointer size-5"
+                      >
+                        <Edit size={6} className="size-3" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedIcon(icon);
+                          setIsDeleteModal(true);
+                        }}
+                        type="button"
+                        className="cursor-pointer text-red-500 size-5"
+                      >
+                        <Trash2 size={6} className="size-3" />
+                      </button>
+                    </div>
+                    <Checkbox
+                      id={icon?._id}
+                      checked={allSelected?.includes(icon?._id)}
+                      onCheckedChange={() => handleCheckboxChange(icon?._id)}
+                    />
+                  </div>
+                </div>
               );
             })}
-        </TableBody>
-      </Table>
+        </div>
+      </div>
 
       <GlobalPagination
         totalItems={total}
@@ -337,7 +288,7 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
         onPageChange={(page, limit) => {
           setPage(page);
           setLimit(limit);
-          getCategories({
+          getIcons({
             page,
             limit,
             search,
@@ -346,12 +297,12 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
         }}
       />
 
-      <CategoryForm
+      <IconForm
         isOpen={isOpenModal}
         setIsOpenModal={setIsOpenModal}
-        setCategories={setCategories}
-        selected={selectedCategory}
-        setSelected={setSelectedCategory}
+        setIcons={setIcons}
+        selected={selectedIcon}
+        setSelected={setSelectedIcon}
       />
 
       {/* Delete Modal */}
@@ -364,4 +315,4 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
   );
 };
 
-export default ActiveCategories;
+export default ActiveIcon;

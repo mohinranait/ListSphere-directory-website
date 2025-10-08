@@ -1,7 +1,8 @@
 import connectDb from "@/lib/connectDb";
-import { errorResponse, generateSlug, successResponse } from "@/lib/helpers";
+import { errorResponse,  successResponse } from "@/lib/helpers";
 import { isAuth } from "@/middleware/decode-user";
-import Category from "@/models/category.model";
+
+import Icon from "@/models/icon.model";
 
 export async function POST(req: Request){
     try {
@@ -20,18 +21,16 @@ export async function POST(req: Request){
         // Connect DB
         await connectDb();
 
-        // Create category
-        const slug = generateSlug(body.name)
-        const category = await Category.create({...body,slug})
-        
+        // Create icon
+        const icon = await Icon.create({...body})
 
-        return successResponse({message:"Create successfully",status:201, payload:{category}})
+        return successResponse({message:"Create successfully",status:201, payload:{icon}})
     } catch (error) {
         return errorResponse({message:"Sorver error"})
     }
 }
 
-// GET ALL CATEGORY FOR AdMIN
+// GET ALL ICON FOR AdMIN
 export async function GET(req: Request){
     try {
         const {searchParams} = new URL(req.url);
@@ -57,7 +56,6 @@ export async function GET(req: Request){
         if(search){
             query.$or= [
                 {name : { $regex: searchText }},
-                { slug : { $regex: searchText }},
             ]
         }
 
@@ -70,17 +68,17 @@ export async function GET(req: Request){
             query.status = status === "true";
         }
 
-        // GET all category
-        const categories = await Category.find(query)
+        // GET all icons
+        const icons = await Icon.find(query)
         .skip(limit * (page - 1))
         .limit(limit)
-        const totalCategories = await Category.find(query).countDocuments()
+        const totalIcons = await Icon.find(query).countDocuments()
         
 
         return successResponse({message:"Successfully",status:200, payload:{
-            categories,
+            icons,
             pagination: {
-                total: totalCategories,
+                total: totalIcons,
                 page,
                 limit,
             }
@@ -101,7 +99,7 @@ export async function PUT (req: Request){
         }
 
         await connectDb();
-        const deleteIds = await Category.updateMany(
+        const deleteIds = await Icon.updateMany(
             { _id: {$in: ids } },
             { $set: {isDelete: action } }
         )
