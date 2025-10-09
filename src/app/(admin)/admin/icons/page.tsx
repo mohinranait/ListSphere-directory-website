@@ -6,6 +6,7 @@ import Main from "@/components/admin/main";
 import { ProfileDropdown } from "@/components/admin/profile-dropdown";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus } from "lucide-react";
 import React, { useState } from "react";
 
 const IconPage = () => {
@@ -22,16 +23,27 @@ const IconPage = () => {
 
       {/* ===== Main ===== */}
       <Main className="">
-        <div className="mb-2 flex items-center justify-between space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">Manage icons</h1>
-          <div className="flex items-center space-x-2">
-            <Button type="button" onClick={() => setIsOpenModal(true)}>
-              New Icon
-            </Button>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-semibold tracking-tight text-balance">
+              Icons
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Manage and organize your icon structure
+            </p>
           </div>
+          <Button
+            type="button"
+            onClick={() => setIsOpenModal(true)}
+            className="gap-2 shadow-sm"
+            size="default"
+          >
+            <Plus className="h-4 w-4" />
+            New Icon
+          </Button>
         </div>
 
-        <Tabs defaultValue="active" className="gap-1">
+        <Tabs defaultValue="active" className="gap-1 pt-2">
           <TabsList>
             <TabsTrigger value="active" className="cursor-pointer">
               Active

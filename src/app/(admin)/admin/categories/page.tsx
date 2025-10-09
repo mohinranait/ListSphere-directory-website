@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import ActiveCategories from "@/components/admin/category/ActiveCategories";
 import TrashCategories from "@/components/admin/category/TrashCategories";
+import { Plus } from "lucide-react";
 
 const CategoryManage = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -23,23 +24,38 @@ const CategoryManage = () => {
 
       {/* ===== Main ===== */}
       <Main className="">
-        <div className="mb-2 flex items-center justify-between space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">
-            Manage categories
-          </h1>
-          <div className="flex items-center space-x-2">
-            <Button type="button" onClick={() => setIsOpenModal(true)}>
-              New Category
-            </Button>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-semibold tracking-tight text-balance">
+              Categories
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Manage and organize your category structure
+            </p>
           </div>
+          <Button
+            type="button"
+            onClick={() => setIsOpenModal(true)}
+            className="gap-2 shadow-sm"
+            size="default"
+          >
+            <Plus className="h-4 w-4" />
+            New Category
+          </Button>
         </div>
 
-        <Tabs defaultValue="active" className="gap-1">
+        <Tabs defaultValue="active" className="gap-1 pt-2">
           <TabsList>
-            <TabsTrigger value="active" className="cursor-pointer">
+            <TabsTrigger
+              value="active"
+              className="cursor-pointer data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
               Active
             </TabsTrigger>
-            <TabsTrigger value="trash" className="cursor-pointer">
+            <TabsTrigger
+              value="trash"
+              className="cursor-pointer data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
               Trash
             </TabsTrigger>
           </TabsList>

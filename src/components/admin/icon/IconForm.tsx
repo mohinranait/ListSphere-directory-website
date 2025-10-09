@@ -59,7 +59,6 @@ const IconForm = ({
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState("");
 
   // Submit form
   const onSubmit = async (data: IconFormValues) => {

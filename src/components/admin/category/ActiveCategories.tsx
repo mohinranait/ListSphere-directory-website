@@ -198,29 +198,36 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
         </div>
       )}
 
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 pb-3 sm:flex-row sm:items-center">
         <Select value={status} onValueChange={(e) => handleChangeStatus(e)}>
-          <SelectTrigger className="min-w-[150px]">
-            <SelectValue placeholder="Select status" />
+          <SelectTrigger className="w-full sm:w-[180px] bg-background ">
+            <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="true">Active</SelectItem>
-            <SelectItem value="false">In-Active</SelectItem>
+            <SelectItem value="false">Inactive</SelectItem>
           </SelectContent>
         </Select>
-        <div className="flex">
+
+        <div className="relative flex flex-1">
+          <LucideIcons.Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search"
-            className="rounded-r-none"
+            placeholder="Search categories..."
+            className="pl-9 bg-background "
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           />
           <Button
             type="button"
             onClick={handleSearch}
-            className="rounded-l-none"
+            className="ml-2 shadow-sm"
           >
             Search
           </Button>
