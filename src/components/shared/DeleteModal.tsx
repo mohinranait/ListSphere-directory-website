@@ -16,8 +16,9 @@ type Props = {
   callBack?: () => void;
   title?: string;
   subTitle?: string;
+  isLoading?: boolean;
 };
-const DeleteModal = ({ open, setOpen, callBack }: Props) => {
+const DeleteModal = ({ open, setOpen, callBack, isLoading }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-[320px]">
@@ -39,6 +40,7 @@ const DeleteModal = ({ open, setOpen, callBack }: Props) => {
             callBack={callBack}
             type="button"
             className="bg-red-500 hover:bg-red-600 text-white"
+            isLoading={isLoading}
           >
             Delete
           </LoadingButton>

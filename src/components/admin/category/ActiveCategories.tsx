@@ -149,8 +149,6 @@ const ActiveCategories = ({ setIsOpenModal, isOpenModal }: Props) => {
     }
   };
 
-  console.log({ page, limit, total });
-
   // handle all Select
   const handleAllSelect = () => {
     if (allSelected?.length === categories.length) {
