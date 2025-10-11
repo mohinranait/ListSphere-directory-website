@@ -34,7 +34,7 @@ export function CategoriesSection() {
   return (
     <section className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
             Explore by category
           </h2>
@@ -48,9 +48,9 @@ export function CategoriesSection() {
           {categories.map((category, index) => (
             <Card
               key={index}
-              className="border-border hover:shadow-md hover:border-primary/20 transition-all duration-300 cursor-pointer group"
+              className="border-border shadow-none hover:shadow hover:border-primary/20 transition-all duration-300 cursor-pointer group"
             >
-              <CardContent className="p-6 text-center">
+              <CardContent className="px-4  text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 group-hover:bg-primary/20 rounded-full mb-4 transition-colors">
                   <category.icon className="h-6 w-6 text-primary" />
                 </div>
