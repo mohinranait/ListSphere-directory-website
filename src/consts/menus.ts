@@ -15,8 +15,15 @@ import {
   HelpCircle,
   KeyRound,
   Layers2,
+  User2,
+  Key,
+  Heart,
+  ListStart,
+  Plus,
+  Badge,
 } from 'lucide-react'
 
+// Admin sidebar menus
 export const sidebarData: NavGroup[] = [
     {
       title: 'General',
@@ -63,4 +70,42 @@ export const sidebarData: NavGroup[] = [
       ],
     },
   ]
+
+// User profile sidebar menus
+export const proifleMenus = {
+  profils:[
+    {
+        title: 'Profile',
+        url: '/profile',
+        icon: User2,
+    },
+    {
+        title: 'Change Password',
+        url: '/profile/change-password',
+        icon: Key,
+    },
+    {
+        title: 'Favorites',
+        url: '/profile/favorites',
+        icon: Heart,
+    },
+  ],
+  listers:[
+    {
+        title: 'Add Listing',
+        url: '/profile/add-listing',
+        icon: Plus,
+    },
+    {
+        title: 'Manage Listing',
+        url: '/profile/listing',
+        icon: ListStart,
+    },
+    {
+        title: 'Subscribetion',
+        url: '/profile/subscribetion',
+        icon: Badge,
+    },
+  ],
+}
 
